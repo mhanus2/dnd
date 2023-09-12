@@ -12,15 +12,10 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Character',
+            name='Race',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=200)),
-                ('character_class', models.CharField(max_length=200)),
-                ('level', models.IntegerField(default=1)),
-                ('background', models.CharField(blank=True, max_length=200, null=True)),
-                ('alignment', models.CharField(blank=True, max_length=200, null=True)),
-                ('player_name', models.CharField(blank=True, max_length=200, null=True)),
                 ('created', models.DateTimeField(auto_now_add=True)),
             ],
         ),

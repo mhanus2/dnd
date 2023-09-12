@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'characters.apps.CharactersConfig',
     'campaigns.apps.CampaignsConfig',
+    'races.apps.RacesConfig',
     'rest_framework',
     "corsheaders",
 

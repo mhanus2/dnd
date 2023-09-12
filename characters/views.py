@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from rest_framework.decorators import api_view, permission_classes
 
 from rest_framework.response import Response
+import requests
 
 from .serializers import CharacterSerializer
 from characters.models import Character
