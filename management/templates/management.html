@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DnD</title>
+</head>
+
+<body>
+    <h1>Management Tool</h1>
+
+    <button id="update_backgrounds">Update Backgrounds</button>
+    <button id="update_alignments">Update Alignments</button>
+
+
+
+    <h2>Races</h2>
+    <table id="race_table">
+        <thead>
+            <tr>
+                <th>name</th>
+                <th>speed</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for race in races %}
+            <tr>
+                <td>{{race.name}}</td>
+                <td>{{race.speed}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <button id="update_races">Update Races</button>
+
+    <h3>New races</h3>
+    <table id="new_races_table">
+        <thead>
+            <tr>
+                <th>name</th>
+                <th>speed</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+        </tbody>
+    </table>
+
+    <h2>Character Classes</h2>
+    <table id="character_class_table">
+        <thead>
+            <tr>
+                <th>name</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for character_class in character_classes %}
+            <tr>
+                <td>{{character_class.name}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+    <button id="update_character_classes">Update Character Classes</button>
+
+    <h3>New Character Classes</h3>
+    <table id="new_character_classes_table">
+        <thead>
+            <tr>
+                <th>name</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+        </tbody>
+    </table>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#update_races').click(function () {
+                $.ajax({
+                    url: "{% url 'update-races' %}",
+                    // on success
+                    success: function (response, status, xhr) {
+
+                        if (xhr.status == 204) {
+                            alert('No new data')
+                        } else {
+                            $('#race_table tbody').empty();
+                            response = response['created_objects']
+
+                            // Projdeme výsledky a vložíme je do tabulky
+                            for (var i = 0; i < response.length; i++) {
+                                var race = response[i];
+                                var row = '<tr><td>' + race.name + '</td><td>' + race.speed + '</td></tr>';
+                                $('#new_races_table tbody').append(row);
+                            }
+                        }
+                    },
+                    // on error
+                    error: function (response) {
+                        // alert the error if any error occured
+                        console.log(response.responseJSON.errors)
+                    }
+                });
+                return false;
+            });
+        })
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#update_character_classes').click(function () {
+                $.ajax({
+                    url: "{% url 'update-character-classes' %}",
+                    // on success
+                    success: function (response, status, xhr) {
+
+                        if (xhr.status == 204) {
+                            alert('No new data')
+                        } else {
+                            $('#character_classes_table tbody').empty();
+                            response = response['created_objects']
+
+                            // Projdeme výsledky a vložíme je do tabulky
+                            for (var i = 0; i < response.length; i++) {
+                                var character_class = response[i];
+                                var row = '<tr><td>' + character_class.name + '</td></tr>';
+                                $('#new_character_classes_table tbody').append(row);
+                            }
+                        }
+                    },
+                    // on error
+                    error: function (response) {
+                        // alert the error if any error occured
+                        console.log(response.responseJSON.errors)
+                    }
+                });
+                return false;
+            });
+        })
+    </script>
+
+<script>
+    $(document).ready(function () {
+        $('#update_backgrounds').click(function () {
+            $.ajax({
+                url: "{% url 'update-backgrounds' %}",
+                success: function (response, status, xhr) {
+
+                    if (xhr.status == 204) {
+                        alert('No new data')
+                    } else {
+
+                    }
+                },
+                error: function (response) {
+                    console.log(response.responseJSON.errors)
+                }
+            });
+            return false;
+        });
+    })
+</script>
+<script>
+    $(document).ready(function () {
+        $('#update_alignments').click(function () {
+            $.ajax({
+                url: "{% url 'update-alignments' %}",
+                success: function (response, status, xhr) {
+
+                    if (xhr.status == 204) {
+                        alert('No new data')
+                    } else {
+
+                    }
+                },
+                error: function (response) {
+                    console.log(response.responseJSON.errors)
+                }
+            });
+            return false;
+        });
+    })
+</script>
+</body>
+
+</html>
