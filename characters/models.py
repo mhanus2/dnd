@@ -4,6 +4,12 @@ from django.contrib.auth.models import User
 
 from dnd_data.models import CharacterClass, Race, Background, Alignment
 
+STATUS_CHOICES = (
+    ('active', 'Active'),
+    ('inactive', 'Inactive'),
+    ('deceased', 'Deceased'),
+)
+
 
 class Character(models.Model):
     name = models.CharField(max_length=200)
@@ -13,7 +19,7 @@ class Character(models.Model):
     background = models.ForeignKey(Background, on_delete=models.CASCADE)
     alignment = models.ForeignKey(Alignment, on_delete=models.CASCADE)
     player = models.ForeignKey(User, on_delete=models.CASCADE)
-    
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='active')
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

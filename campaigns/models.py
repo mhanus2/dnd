@@ -5,10 +5,14 @@ from characters.models import Character
 
 # todo - počet session, počet hráčů, datum poslední schůzky    
 
+class Session(models.Model):
+    name = models.CharField(max_length=200)
+    
+
 class Campaign(models.Model):
     name = models.CharField(max_length=200)
     dungeon_master = models.ForeignKey(User, on_delete=models.CASCADE)
-    characters = models.ManyToManyField(Character, related_name='campaigns')
+    characters = models.ManyToManyField(Character, related_name='campaigns', blank=True)
     description = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
 

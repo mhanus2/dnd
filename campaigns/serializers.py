@@ -20,5 +20,6 @@ class CampaignSerializer(serializers.ModelSerializer):
         exclude = ('created', )
         
 class CampaignTypeSerializer(serializers.Serializer):
+    user_is_dm = serializers.BooleanField(default=False)
     dm = CampaignListSerializer(many=True, read_only=True)
     player = CampaignListSerializer(many=True, read_only=True)
