@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'management.apps.ManagementConfig',
-    'characters.apps.CharactersConfig',
     'campaigns.apps.CampaignsConfig',
     'dnd_data.apps.DndDataConfig',
     'rest_framework',
