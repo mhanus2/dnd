@@ -15,5 +15,9 @@ urlpatterns = [
 
     path('<int:campaign_id>/characters/create/', views.create_character),
     path('<int:campaign_id>/characters/update/<int:character_id>', views.update_character),
-    path('<int:campaign_id>/characters/delete/<int:character_id>', views.delete_character)
+    path('<int:campaign_id>/characters/delete/<int:character_id>', views.delete_character),
+
+    path('<int:campaign_id>/characters/<int:character_id>/update-skills/', views.update_character_skills),
+    path('<int:campaign_id>/characters/<int:character_id>/update-abilities/', views.update_character_abilities),
+    path('<int:campaign_id>/characters/<int:character_id>/update-saving-throws/', views.update_saving_throws),
 ]
