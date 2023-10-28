@@ -51,7 +51,7 @@ class Character(models.Model):
     )
     armor_class = models.PositiveIntegerField(default=10)
 
-    # Zdatnosti
+    # Efficiencies
     light_armor = models.BooleanField(default=False)
     middle_armor = models.BooleanField(default=False)
     heavy_armor = models.BooleanField(default=False)
@@ -70,7 +70,6 @@ class Character(models.Model):
 
     player = models.ForeignKey(User, on_delete=models.CASCADE)
     campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE)
-    created = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
         if not self.id and not self.speed:
@@ -90,12 +89,12 @@ class CharacterAbility(models.Model):
     score = models.PositiveIntegerField(default=0)
     modifier = models.IntegerField(default=0)
 
-    def __str__(self):
-        return f"{self.character.name}'s {self.ability.name}"
-
     class Meta:
         unique_together = ("character", "ability")
-        verbose_name_plural = "Character Abilities"
+        verbose_name_plural = "Character abilities"
+
+    def __str__(self):
+        return f"{self.character.name}'s {self.ability.name}"
 
 
 class CharacterSkill(models.Model):
@@ -105,6 +104,9 @@ class CharacterSkill(models.Model):
     skill = models.ForeignKey(Skill, on_delete=models.CASCADE)
     value = models.IntegerField(default=0)
     proficiency = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ("character", "skill")
 
     def __str__(self):
         return f"{self.character.name}'s {self.skill.name}"
@@ -118,6 +120,9 @@ class PassiveSkill(models.Model):
     value = models.IntegerField(default=0)
     proficiency = models.BooleanField(default=False)
 
+    class Meta:
+        unique_together = ("character", "skill")
+
     def __str__(self):
         return f"{self.character.name}'s {self.skill.name}"
 
@@ -130,6 +135,9 @@ class SavingThrow(models.Model):
     value = models.IntegerField(default=0)
     proficiency = models.BooleanField(default=False)
 
+    class Meta:
+        unique_together = ('character', 'ability')
+
     def __str__(self):
         return f"{self.character.name}'s {self.ability.name}"
 
@@ -141,6 +149,9 @@ class HitDice(models.Model):
     dice = models.ForeignKey(Dice, on_delete=models.CASCADE)
     max_qty = models.PositiveIntegerField(default=0)
     actual_qty = models.PositiveBigIntegerField(default=0)
+
+    class Meta:
+        unique_together = ('character', 'dice')
 
     def __str__(self):
         return f"{self.character.name}'s {self.dice.name}"
