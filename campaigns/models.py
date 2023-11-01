@@ -9,11 +9,13 @@ from dnd_data.models import (
     Ability,
     Skill,
     Dice,
+    Item,
 )
 from django.core.validators import MinValueValidator
 
 
 # todo - počet session, počet hráčů, datum poslední schůzky
+# todo - zbrane
 
 STATUS_CHOICES = [
     ("active", "Active"),
@@ -32,11 +34,14 @@ class Campaign(models.Model):
         return self.name
 
 
+class Session(models.Model):
+    name = models.CharField(max_length=200)
+
+
 class Character(models.Model):
     # Basic Info
     name = models.CharField(max_length=100)
     race = models.ForeignKey(Race, on_delete=models.CASCADE)
-    character_class = models.ForeignKey(CharacterClass, on_delete=models.CASCADE)
     level = models.PositiveIntegerField(default=1)
 
     background = models.ForeignKey(Background, on_delete=models.CASCADE)
@@ -75,10 +80,26 @@ class Character(models.Model):
         if not self.id and not self.speed:
             self.speed = self.race.speed
 
+        Inventory.objects.get_or_create(character=self)
+
         super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
+
+
+class CharacterMultiClass(models.Model):
+    character = models.ForeignKey(
+        Character, on_delete=models.CASCADE, related_name="character_classes"
+    )
+    character_class = models.ForeignKey(CharacterClass, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ("character", "character_class")
+        verbose_name_plural = "Character MultiClasses"
+
+    def __str__(self):
+        return f"{self.character.name}'s {self.character_class.name}"
 
 
 class CharacterAbility(models.Model):
@@ -136,7 +157,7 @@ class SavingThrow(models.Model):
     proficiency = models.BooleanField(default=False)
 
     class Meta:
-        unique_together = ('character', 'ability')
+        unique_together = ("character", "ability")
 
     def __str__(self):
         return f"{self.character.name}'s {self.ability.name}"
@@ -151,7 +172,7 @@ class HitDice(models.Model):
     actual_qty = models.PositiveBigIntegerField(default=0)
 
     class Meta:
-        unique_together = ('character', 'dice')
+        unique_together = ("character", "dice")
 
     def __str__(self):
         return f"{self.character.name}'s {self.dice.name}"
@@ -166,11 +187,35 @@ class SpellSlot(models.Model):
     remaining_slots = models.PositiveIntegerField(default=0)
 
     class Meta:
-        unique_together = ('character', 'level')
+        unique_together = ("character", "level")
 
     def __str__(self):
         return f"{self.character.name}'s Level {self.level} Spell Slots"
 
 
-class Session(models.Model):
-    name = models.CharField(max_length=200)
+# ----------
+# Inventory
+# ----------
+
+
+class Inventory(models.Model):
+    character = models.OneToOneField(
+        Character, on_delete=models.CASCADE, related_name="inventory"
+    )
+
+    class Meta:
+        verbose_name_plural = "Inventories"
+
+    def __str__(self) -> str:
+        return f"Inventory of {self.character}"
+
+
+class InventoryItem(models.Model):
+    inventory = models.ForeignKey(Inventory, on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    note = models.TextField(blank=True)
+    qty = models.PositiveSmallIntegerField(default=1)
+    attunement = models.BooleanField(default=False)
+
+    def __str__(self) -> str:
+        return f"{self.qty}x {self.item.name}"

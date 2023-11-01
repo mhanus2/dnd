@@ -4,6 +4,7 @@ from rest_framework import serializers
 from campaigns.models import (
     Campaign,
     Character,
+    CharacterMultiClass,
     CharacterAbility,
     CharacterSkill,
     PassiveSkill,
@@ -22,54 +23,67 @@ from dnd_data.serializers import (
 )
 
 
+# ------------------
 # Character Creation
+# ------------------
+
+
+class CharacterMultiClassSerializer(serializers.ModelSerializer):
+    character_class_name = serializers.StringRelatedField(source="character_class.name")
+
+    class Meta:
+        model = CharacterMultiClass
+        fields = ("character_class","character_class_name")
+
+
 class CharacterAbilitySerializer(serializers.ModelSerializer):
-    ability_name = serializers.StringRelatedField(source='ability.name')
-    
+    ability_name = serializers.StringRelatedField(source="ability.name")
+
     class Meta:
         model = CharacterAbility
-        fields = ('ability', 'ability_name', 'score', 'modifier')
+        fields = ("ability", "ability_name", "score", "modifier")
 
 
 class CharacterSkillSerializer(serializers.ModelSerializer):
-    skill_name = serializers.StringRelatedField(source='skill.name')
+    skill_name = serializers.StringRelatedField(source="skill.name")
 
     class Meta:
         model = CharacterSkill
-        fields = ('skill', 'skill_name', 'value', 'proficiency')
+        fields = ("skill", "skill_name", "value", "proficiency")
 
 
 class PassiveSkillSerializer(serializers.ModelSerializer):
-    skill_name = serializers.StringRelatedField(source='skill.name')
-    
+    skill_name = serializers.StringRelatedField(source="skill.name")
+
     class Meta:
         model = PassiveSkill
-        fields = ('skill', 'skill_name', 'value', 'proficiency')
+        fields = ("skill", "skill_name", "value", "proficiency")
 
 
 class SavingThrowSerializer(serializers.ModelSerializer):
-    ability_name = serializers.StringRelatedField(source='ability.name')
+    ability_name = serializers.StringRelatedField(source="ability.name")
 
     class Meta:
         model = SavingThrow
-        fields = ('ability', 'ability_name', 'value', 'proficiency')
+        fields = ("ability", "ability_name", "value", "proficiency")
 
 
 class HitDiceSerializer(serializers.ModelSerializer):
-    dice_name = serializers.StringRelatedField(source='dice.name')
-    
+    dice_name = serializers.StringRelatedField(source="dice.name")
+
     class Meta:
         model = HitDice
-        fields = ('dice', 'dice_name', 'max_qty', 'actual_qty')
+        fields = ("dice", "dice_name", "max_qty", "actual_qty")
 
 
-class SpellSlotSerializer(serializers.ModelSerializer):    
+class SpellSlotSerializer(serializers.ModelSerializer):
     class Meta:
         model = SpellSlot
-        fields = ('level', 'max_slots', 'remaining_slots')
+        fields = ("level", "max_slots", "remaining_slots")
 
 
 class CharacterCreationSerializer(serializers.ModelSerializer):
+    character_classes = CharacterMultiClassSerializer(many=True)
     character_abilities = CharacterAbilitySerializer(many=True)
     character_skills = CharacterSkillSerializer(many=True)
     passive_skills = PassiveSkillSerializer(many=True)
@@ -85,6 +99,7 @@ class CharacterCreationSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         # Extract related objects data
         related_fields = {
+            "character_classes": CharacterMultiClass,
             "character_abilities": CharacterAbility,
             "character_skills": CharacterSkill,
             "passive_skills": PassiveSkill,
@@ -118,6 +133,22 @@ class CharacterCreationSerializer(serializers.ModelSerializer):
         model.objects.bulk_create(objects_to_create)
 
 
+# ------------------
+# Character edit
+# ------------------
+
+
+class CharacterBasicInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Character
+        fields = ["name", "race", "level"]
+
+
+# ------------------
+# Other
+# ------------------
+
+
 class CharactersInCampaignListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Character
@@ -125,7 +156,7 @@ class CharactersInCampaignListSerializer(serializers.ModelSerializer):
 
 
 class CharacterSerializer(serializers.ModelSerializer):
-    character_class = CharacterClassSerializer()
+    character_classes = CharacterMultiClassSerializer(many=True)
     race = RaceSerializer()
     background = BackgroundSerializer()
     alignment = AlignmentSerializer()
@@ -138,7 +169,7 @@ class CharacterSerializer(serializers.ModelSerializer):
             "name",
             "level",
             "race",
-            "character_class",
+            "character_classes",
             "background",
             "alignment",
             "player",

@@ -17,7 +17,9 @@ from campaigns.serializers import (
     PassiveSkillSerializer,
     SavingThrowSerializer,
     HitDiceSerializer,
-    SpellSlotSerializer
+    SpellSlotSerializer,
+    CharacterBasicInfoSerializer,
+    CharacterMultiClassSerializer,
 )
 from campaigns.models import (
     Campaign,
@@ -27,23 +29,23 @@ from campaigns.models import (
     SavingThrow,
     PassiveSkill,
     HitDice,
-    SpellSlot
+    SpellSlot,
+    CharacterMultiClass,
 )
 from campaigns.constants import MODIFIER_MAP, PASSIVE_SKILLS
 from campaigns.decorators import dungeon_master_required
 
-from dnd_data.models import Skill, Ability, Dice
+from dnd_data.models import Skill, Ability, Dice, CharacterClass
 
 
 # todo - uprava kampane - pridat vsechny fieldy
 
 
+
 # Campaign views
 @api_view(["GET"])
 def get_campaigns(request):
-    user_instance = (
-        request.user if request.user.is_authenticated else User.objects.get(id=1)
-    )
+    user_instance = request.user
 
     dm_campaigns = Campaign.objects.filter(dungeon_master=user_instance).distinct()
     player_campaigns = Campaign.objects.filter(
@@ -155,6 +157,10 @@ def get_character_detail(request, campaign_id, character_id):
     return Response(serializer.data)
 
 
+# Character data manipulation
+# ---------------------------
+
+
 @api_view(["POST"])
 def create_character(request, campaign_id):
     data = request.data
@@ -170,27 +176,59 @@ def create_character(request, campaign_id):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# @api_view(["PATCH"])
-# def update_character(request, character_id):
-#     user_instance = (
-#         request.user if request.user.is_authenticated else User.objects.get(id=1)
-#     )
+@api_view(["PATCH"])
+def update_basic_info(request, campaign_id, character_id):
+    user_instance = request.user
+    character = get_object_or_404(Character, id=character_id)
 
-#     character = get_object_or_404(Character, id=character_id)
+    if character.player != user_instance:
+        return Response(
+            {"detail": "Permission denied."}, status=status.HTTP_403_FORBIDDEN
+        )
 
-#     if character.player != user_instance:
-#         return Response(
-#             {"detail": "Permission denied."}, status=status.HTTP_403_FORBIDDEN
-#         )
+    data = request.data
+    data["character"] = character_id
 
-#     data = request.data
+    serializer = CharacterBasicInfoSerializer(character, data=data)
 
-#     character.name = data.get("name", character.name)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-#     character.save()
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-#     serializer = CharacterSerializer(character)
-#     return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(["PATCH"])
+def update_character_multiclass(request, campaign_id, character_id):
+    user_instance = request.user
+    character = get_object_or_404(Character, id=character_id)
+
+    if character.player != user_instance:
+        return Response(
+            {"detail": "Permission denied."}, status=status.HTTP_403_FORBIDDEN
+        )
+
+    data = request.data
+
+    response_data = []
+
+    for item in data:
+        character_class_instance = CharacterClass.objects.get(id=item["id"])
+        item["character"] = character_id
+
+        existing_instance = CharacterMultiClass.objects.get_or_create(
+            character=character, character_class=character_class_instance
+        )[0]
+
+        serializer = CharacterMultiClassSerializer(existing_instance, data=item)
+
+        if serializer.is_valid():
+            serializer.save()
+            response_data.append(serializer.data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    return Response(response_data, status=status.HTTP_201_CREATED)
 
 
 @api_view(["PATCH"])
@@ -277,7 +315,10 @@ def update_passive_skills(request, campaign_id, character_id):
         skill_instance = Skill.objects.get(id=item["skill"])
 
         if skill_instance.name not in PASSIVE_SKILLS:
-            return Response({"message":f"{skill_instance.name} is not passive ability!"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"message": f"{skill_instance.name} is not passive ability!"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         item["character"] = character_id
 
@@ -394,7 +435,6 @@ def update_spell_slots(request, campaign_id, character_id):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     return Response(response_data, status=status.HTTP_201_CREATED)
-
 
 
 @api_view(["PATCH"])

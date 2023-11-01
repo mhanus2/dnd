@@ -89,9 +89,30 @@ class Skill(models.Model):
     def __str__(self):
         return self.name
 
+
 class Dice(models.Model):
     name = models.CharField(max_length=5)
     value = models.IntegerField(default=6)
 
     def __str__(self):
+        return self.name
+
+
+class Tag(models.Model):
+    name = models.CharField(max_length=50)
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class Item(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+    value = models.PositiveIntegerField()
+    tags = models.ManyToManyField(Tag, related_name="tags")
+    allowed_characters = models.ManyToManyField(
+        'campaigns.Character', related_name="accessible_items", blank=True
+    )
+
+    def __str__(self) -> str:
         return self.name
