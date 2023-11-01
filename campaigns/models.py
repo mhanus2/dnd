@@ -10,6 +10,7 @@ from dnd_data.models import (
     Skill,
     Dice,
     Item,
+    Spell
 )
 from django.core.validators import MinValueValidator
 
@@ -219,3 +220,15 @@ class InventoryItem(models.Model):
 
     def __str__(self) -> str:
         return f"{self.qty}x {self.item.name}"
+
+# ----------
+# Spells
+# ----------
+
+class CharacterSpell(models.Model):
+    character = models.ForeignKey(Character, on_delete=models.CASCADE)
+    spell = models.ForeignKey(Spell, on_delete=models.CASCADE)
+    note = models.TextField(blank=True)
+
+    class Meta:
+        unique_together = ("character", "spell")

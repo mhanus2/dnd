@@ -1,5 +1,8 @@
 from django.db import models
 
+# todo - zjistit co vše je potřeba u spellů
+# todo - zjistit co vše je potřeba u zbraní
+
 
 class Race(models.Model):
     name = models.CharField(max_length=200)
@@ -111,8 +114,51 @@ class Item(models.Model):
     value = models.PositiveIntegerField()
     tags = models.ManyToManyField(Tag, related_name="tags")
     allowed_characters = models.ManyToManyField(
-        'campaigns.Character', related_name="accessible_items", blank=True
+        "campaigns.Character", related_name="accessible_items", blank=True
     )
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class Weapon(models.Model):
+    name = models.CharField(max_length=50)
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class SpellType(models.Model):
+    name = models.CharField(max_length=10)
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class SpellSchool(models.Model):
+    name = models.CharField(max_length=50)
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class SpellComponent(models.Model):
+    name = models.CharField(max_length=10)
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class Spell(models.Model):
+    name = models.CharField(max_length=50)
+    type = models.ForeignKey(SpellType, on_delete=models.CASCADE, related_name="spells")
+    school = models.ForeignKey(
+        SpellSchool, on_delete=models.CASCADE, related_name="spells"
+    )
+    casting_time = models.CharField(max_length=10)
+    range = models.CharField(max_length=10)
+    duration = models.CharField(max_length=25)
+    components = models.ManyToManyField(SpellComponent, related_name="spells")
 
     def __str__(self) -> str:
         return self.name

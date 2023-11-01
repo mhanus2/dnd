@@ -10,10 +10,15 @@ from .models import (
     SpellSlot,
     CharacterMultiClass,
     Inventory,
-    InventoryItem
+    InventoryItem,
+    CharacterSpell,
+    Session,
 )
 
 
+# -----------------
+# Character inlines
+# -----------------
 class CharacterMultiClassInline(admin.TabularInline):
     model = CharacterMultiClass
     extra = 1
@@ -53,11 +58,23 @@ class InventoryInline(admin.TabularInline):
     model = Inventory
     extra = 1
 
+
+class CharacterSpellInline(admin.TabularInline):
+    model = CharacterSpell
+    extra = 1
+
+
+# -----------------
+# Inventory inlines
+# -----------------
 class InventoryItemInline(admin.TabularInline):
     model = InventoryItem
     extra = 1
 
 
+# ----------
+# ModelAdmin
+# ----------
 class CharacterAdmin(admin.ModelAdmin):
     inlines = [
         CharacterMultiClassInline,
@@ -67,16 +84,16 @@ class CharacterAdmin(admin.ModelAdmin):
         PassiveSkillInline,
         HitDiceInline,
         SpellSlotInline,
-        InventoryInline,
+        CharacterSpellInline
     ]
 
+
 class InventoryAdmin(admin.ModelAdmin):
-    inlines = [
-        InventoryItemInline
-    ]
+    inlines = [InventoryItemInline]
 
 
 admin.site.register(Campaign)
+admin.site.register(Session)
 admin.site.register(CharacterAbility)
 admin.site.register(CharacterSkill)
 admin.site.register(Character, CharacterAdmin)
