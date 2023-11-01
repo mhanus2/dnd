@@ -10,7 +10,7 @@ from dnd_data.models import (
     Skill,
     Dice,
     Item,
-    Spell
+    Spell,
 )
 from django.core.validators import MinValueValidator
 
@@ -31,19 +31,18 @@ class Campaign(models.Model):
     description = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
 
+    @property
+    def session_count(self):
+        return self.campaign_sessions.count()
+
     def __str__(self):
         return self.name
-
-
-class Session(models.Model):
-    name = models.CharField(max_length=200)
 
 
 class Character(models.Model):
     # Basic Info
     name = models.CharField(max_length=100)
     race = models.ForeignKey(Race, on_delete=models.CASCADE)
-    level = models.PositiveIntegerField(default=1)
 
     background = models.ForeignKey(Background, on_delete=models.CASCADE)
     alignment = models.ForeignKey(Alignment, on_delete=models.CASCADE)
@@ -74,6 +73,8 @@ class Character(models.Model):
 
     speed = models.PositiveIntegerField(default=0)
 
+    notes = models.TextField(blank=True)
+
     player = models.ForeignKey(User, on_delete=models.CASCADE)
     campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE)
 
@@ -94,6 +95,7 @@ class CharacterMultiClass(models.Model):
         Character, on_delete=models.CASCADE, related_name="character_classes"
     )
     character_class = models.ForeignKey(CharacterClass, on_delete=models.CASCADE)
+    level = models.PositiveSmallIntegerField(default=1)
 
     class Meta:
         unique_together = ("character", "character_class")
@@ -179,26 +181,9 @@ class HitDice(models.Model):
         return f"{self.character.name}'s {self.dice.name}"
 
 
-class SpellSlot(models.Model):
-    character = models.ForeignKey(
-        Character, on_delete=models.CASCADE, related_name="spell_slots"
-    )
-    level = models.PositiveIntegerField()
-    max_slots = models.PositiveIntegerField(default=0)
-    remaining_slots = models.PositiveIntegerField(default=0)
-
-    class Meta:
-        unique_together = ("character", "level")
-
-    def __str__(self):
-        return f"{self.character.name}'s Level {self.level} Spell Slots"
-
-
 # ----------
 # Inventory
 # ----------
-
-
 class Inventory(models.Model):
     character = models.OneToOneField(
         Character, on_delete=models.CASCADE, related_name="inventory"
@@ -221,14 +206,60 @@ class InventoryItem(models.Model):
     def __str__(self) -> str:
         return f"{self.qty}x {self.item.name}"
 
-# ----------
-# Spells
-# ----------
 
+# ------
+# Spells
+# ------
 class CharacterSpell(models.Model):
     character = models.ForeignKey(Character, on_delete=models.CASCADE)
     spell = models.ForeignKey(Spell, on_delete=models.CASCADE)
+    character_class_relation = models.ForeignKey(
+        CharacterMultiClass, on_delete=models.CASCADE, related_name="known_spells"
+    )
+    prepared = models.BooleanField(default=False)
     note = models.TextField(blank=True)
 
     class Meta:
-        unique_together = ("character", "spell")
+        unique_together = ["character", "spell"]
+
+
+class SpellSlot(models.Model):
+    character = models.ForeignKey(
+        Character, on_delete=models.CASCADE, related_name="spell_slots"
+    )
+    level = models.PositiveIntegerField()
+    max_slots = models.PositiveIntegerField(default=0)
+    remaining_slots = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        unique_together = ("character", "level")
+
+    def __str__(self):
+        return f"{self.character.name}'s Level {self.level} Spell Slots"
+
+
+# -------
+# Session
+# -------
+class Session(models.Model):
+    campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE, related_name='campaign_sessions')
+    name = models.CharField(max_length=200)
+    date = models.DateField()
+
+    @property
+    def character_count(self):
+        return self.session_characters.count()
+
+    def __str__(self):
+        return self.name
+
+
+class SessionCharacter(models.Model):
+    session = models.ForeignKey(Session, on_delete=models.CASCADE, related_name='sessions_characters')
+    character = models.ForeignKey(Character, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ['session', 'character']
+
+    def __str__(self):
+        return f"{self.character.name} in {self.session.name}"

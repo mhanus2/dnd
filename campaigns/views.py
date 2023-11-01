@@ -41,7 +41,6 @@ from dnd_data.models import Skill, Ability, Dice, CharacterClass
 # todo - uprava kampane - pridat vsechny fieldy
 
 
-
 # Campaign views
 @api_view(["GET"])
 def get_campaigns(request):
@@ -157,10 +156,9 @@ def get_character_detail(request, campaign_id, character_id):
     return Response(serializer.data)
 
 
+# ---------------------------
 # Character data manipulation
 # ---------------------------
-
-
 @api_view(["POST"])
 def create_character(request, campaign_id):
     data = request.data
