@@ -17,9 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
+# todo - add default page
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('management.urls')),
     path("accounts/", include("django.contrib.auth.urls")),
     path('campaigns/', include('campaigns.urls')),
     path('dnd_data/', include('dnd_data.urls')),

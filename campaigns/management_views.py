@@ -1,16 +1,10 @@
-from django.urls import reverse
-from django.http import HttpResponseRedirect, HttpResponse
-from django.http import JsonResponse
-
-from django.shortcuts import redirect, render
-from rest_framework.decorators import api_view, permission_classes
-
-from rest_framework.response import Response
 import requests
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.shortcuts import render
+from rest_framework.response import Response
 
 from dnd_data.models import Race, CharacterClass, Background, Alignment
-
-from django.contrib.auth.decorators import login_required
 
 
 @login_required
