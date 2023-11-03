@@ -2,7 +2,6 @@ from django.db import transaction, models
 from rest_framework import serializers
 
 from campaigns.models import (
-    Campaign,
     Character,
     CharacterMultiClass,
     CharacterAbility,
@@ -12,13 +11,10 @@ from campaigns.models import (
     HitDice,
     SpellSlot,
 )
-
-from dnd_data.serializers import UserSerializer
 from dnd_data.serializers import (
     UserSerializer,
     AlignmentSerializer,
     BackgroundSerializer,
-    CharacterClassSerializer,
     RaceSerializer,
 )
 
@@ -26,14 +22,12 @@ from dnd_data.serializers import (
 # ------------------
 # Character Creation
 # ------------------
-
-
 class CharacterMultiClassSerializer(serializers.ModelSerializer):
     character_class_name = serializers.StringRelatedField(source="character_class.name")
 
     class Meta:
         model = CharacterMultiClass
-        fields = ("character_class","character_class_name")
+        fields = ("character_class", "character_class_name")
 
 
 class CharacterAbilitySerializer(serializers.ModelSerializer):
@@ -121,11 +115,11 @@ class CharacterCreationSerializer(serializers.ModelSerializer):
         return character
 
     def _create_related_objects(
-        self,
-        model: models.Model,
-        related_name: str,
-        data_list: dict,
-        instance: Character,
+            self,
+            model: models.Model,
+            related_name: str,
+            data_list: dict,
+            instance: Character,
     ):
         objects_to_create = [
             model(**{related_name: instance, **data}) for data in data_list
@@ -136,19 +130,15 @@ class CharacterCreationSerializer(serializers.ModelSerializer):
 # ------------------
 # Character edit
 # ------------------
-
-
 class CharacterBasicInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Character
-        fields = ["name", "race", "level"]
+        fields = ["name", "race"]
 
 
 # ------------------
 # Other
 # ------------------
-
-
 class CharactersInCampaignListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Character
@@ -164,43 +154,4 @@ class CharacterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Character
-        fields = [
-            "id",
-            "name",
-            "level",
-            "race",
-            "character_classes",
-            "background",
-            "alignment",
-            "player",
-        ]
-
-
-class CampaignListSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Campaign
-        fields = ["id", "name", "description"]
-
-
-class CampaignSerializer(serializers.ModelSerializer):
-    dungeon_master = UserSerializer()
-    characters = CharacterSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = Campaign
-        exclude = ("created",)
-
-    def to_representation(self, instance):
-        ret = super().to_representation(instance)
-
-        characters = Character.objects.filter(campaign=instance)
-        character_serializer = CharacterSerializer(characters, many=True)
-        ret["characters"] = character_serializer.data
-
-        return ret
-
-
-class CampaignTypeSerializer(serializers.Serializer):
-    user_is_dm = serializers.BooleanField(default=False)
-    dm = CampaignListSerializer(many=True, read_only=True)
-    player = CampaignListSerializer(many=True, read_only=True)
+        fields = "__all__"

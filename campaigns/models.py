@@ -15,7 +15,6 @@ from dnd_data.models import (
 from django.core.validators import MinValueValidator
 
 
-# todo - počet session, počet hráčů, datum poslední schůzky
 # todo - zbrane
 
 STATUS_CHOICES = [
