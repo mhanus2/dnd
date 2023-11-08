@@ -3,25 +3,25 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from campaigns.models import Campaign
+from campaigns.serializers import CampaignCreationSerializer
 
 
 @api_view(["POST"])
 def create_campaign(request):
-    if not request.user.groups.filter(name="DM").exists():
+    user_instance = request.user
+    
+    if not user_instance.groups.filter(name="DM").exists():
         return Response(
             {"detail": "Permission denied."}, status=status.HTTP_403_FORBIDDEN
         )
 
-    user_instance = request.user
     data = request.data
+    data['dungeon_master'] = user_instance.id
 
-    campaign = Campaign.objects.create(
-        name=data.get("name"),
-        dungeon_master=user_instance,
-        description=data.get("description"),
-    )
+    serializer = CampaignCreationSerializer(data=data)
 
-    return Response(
-        {"message": "Campaign created successfully", "campaign_id": campaign.id},
-        status=status.HTTP_201_CREATED,
-    )
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

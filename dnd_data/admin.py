@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Race, CharacterClass, Background, Alignment, Ability, Skill, Dice, Tag, Item, Spell, SpellType, SpellSchool, SpellComponent, Weapon
+from .models import Race, CharacterClass, Background, Alignment, Ability, Skill, Dice, Tag, Item, Spell, SpellSchool, SpellComponent, Weapon
 
 class SkillAdmin(admin.ModelAdmin):
     list_display = ['name', 'ability']
@@ -15,7 +15,6 @@ admin.site.register(Tag)
 admin.site.register(Item)
 admin.site.register(Weapon)
 admin.site.register(Spell)
-admin.site.register(SpellType)
 admin.site.register(SpellSchool)
 admin.site.register(SpellComponent)
 admin.site.register(Skill, SkillAdmin)

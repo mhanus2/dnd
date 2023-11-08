@@ -4,14 +4,14 @@ from campaigns.models import (
     Campaign,
     Character,
 )
+from campaigns.serializers.character import CharacterSerializer
 from dnd_data.serializers import UserSerializer
-from .character import CharacterSerializer
 
 
-class CampaignListSerializer(serializers.ModelSerializer):
+class CampaignCreationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Campaign
-        fields = ["id", "name", "description"]
+        fields = ["name", "description", "dungeon_master"]
 
 
 class CampaignSerializer(serializers.ModelSerializer):
@@ -20,7 +20,7 @@ class CampaignSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Campaign
-        exclude = ("created",)
+        fields = ["name", "description", "dungeon_master"]
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)
@@ -30,6 +30,12 @@ class CampaignSerializer(serializers.ModelSerializer):
         ret["character"] = character_serializer.data
 
         return ret
+
+
+class CampaignListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Campaign
+        fields = ["id", "name", "description"]
 
 
 class CampaignTypeSerializer(serializers.Serializer):

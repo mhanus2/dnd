@@ -13,6 +13,7 @@ from .models import (
     InventoryItem,
     CharacterSpell,
     Session,
+    CharacterWeapon
 )
 
 
@@ -63,6 +64,10 @@ class CharacterSpellInline(admin.TabularInline):
     model = CharacterSpell
     extra = 1
 
+class CharacterWeaponInline(admin.TabularInline):
+    model = CharacterWeapon
+    extra = 1
+
 
 # -----------------
 # Inventory inlines
@@ -84,7 +89,8 @@ class CharacterAdmin(admin.ModelAdmin):
         PassiveSkillInline,
         HitDiceInline,
         SpellSlotInline,
-        CharacterSpellInline
+        CharacterSpellInline,
+        CharacterWeaponInline
     ]
 
 
