@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from campaigns.models import Campaign
-from campaigns.serializers import CampaignTypeSerializer, CampaignSerializer
+from campaigns.serializers.campaign import CampaignTypeSerializer, CampaignSerializer
 
 
 @api_view(["GET"])

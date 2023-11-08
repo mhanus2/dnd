@@ -8,12 +8,6 @@ from campaigns.serializers.character import CharacterSerializer
 from dnd_data.serializers import UserSerializer
 
 
-class CampaignCreationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Campaign
-        fields = ["name", "description", "dungeon_master"]
-
-
 class CampaignSerializer(serializers.ModelSerializer):
     dungeon_master = UserSerializer()
     characters = CharacterSerializer(many=True, read_only=True)
