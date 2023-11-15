@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from campaigns.serializers import (
-    CharacterCreationSerializer,
+    SerializerCharacterCreation,
 )
 
 
@@ -13,7 +13,7 @@ def create_character(request, campaign_id):
     data["player"] = request.user.id
     data["campaign"] = campaign_id
 
-    serializer = CharacterCreationSerializer(data=data)
+    serializer = SerializerCharacterCreation(data=data)
 
     if serializer.is_valid():
         serializer.save()

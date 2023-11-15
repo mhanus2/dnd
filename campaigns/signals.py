@@ -6,9 +6,15 @@ from .models import (
     CharacterSkill,
     SavingThrow,
     PassiveSkill,
+    Inventory,
 )
 from dnd_data.models import Ability, Skill
 
+
+@receiver(post_save, sender=Character)
+def create_character_stats(sender, instance, created, **kwargs):
+    if created:
+        Inventory.objects.create(character=instance)
 
 
 # @receiver(post_save, sender=Character)

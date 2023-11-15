@@ -13,26 +13,26 @@ from campaigns.models import (
     CharacterSpell
 )
 from campaigns.serializers.character.shared import (
-    CharacterMultiClassSerializer,
-    CharacterAbilitySerializer,
-    CharacterSkillSerializer,
-    PassiveSkillSerializer,
-    SavingThrowSerializer,
-    HitDiceSerializer,
-    SpellSlotSerializer,
-    CharacterSpellSerializer,
+    SerializerCharacterMultiClass,
+    SerializerCharacterAbility,
+    SerializerCharacterSkill,
+    SerializerPassiveSkill,
+    SerializerSavingThrow,
+    SerializerHitDice,
+    SerializerSpellSlot,
+    SerializerCharacterSpell,
 )
 
 
-class CharacterCreationSerializer(serializers.ModelSerializer):
-    character_classes = CharacterMultiClassSerializer(many=True)
-    character_abilities = CharacterAbilitySerializer(many=True)
-    character_skills = CharacterSkillSerializer(many=True)
-    passive_skills = PassiveSkillSerializer(many=True)
-    saving_throws = SavingThrowSerializer(many=True)
-    hit_dices = HitDiceSerializer(many=True)
-    spell_slots = SpellSlotSerializer(many=True)
-    character_spells = CharacterSpellSerializer(many=True)
+class SerializerCharacterCreation(serializers.ModelSerializer):
+    character_classes = SerializerCharacterMultiClass(many=True)
+    character_abilities = SerializerCharacterAbility(many=True)
+    character_skills = SerializerCharacterSkill(many=True)
+    passive_skills = SerializerPassiveSkill(many=True)
+    saving_throws = SerializerSavingThrow(many=True)
+    hit_dices = SerializerHitDice(many=True)
+    spell_slots = SerializerSpellSlot(many=True)
+    character_spells = SerializerCharacterSpell(many=True)
 
     class Meta:
         model = Character

@@ -9,8 +9,8 @@ from campaigns.models import (
     Character,
 )
 from campaigns.serializers import (
-    CharacterSerializer,
-    CharactersInCampaignListSerializer,
+    SerializerCharacter,
+    SerializerCharactersInCampaignList,
 )
 
 
@@ -25,12 +25,12 @@ def get_characters(request, campaign_id: int):
             status=status.HTTP_404_NOT_FOUND,
         )
 
-    serializer = CharactersInCampaignListSerializer(characters, many=True)
+    serializer = SerializerCharactersInCampaignList(characters, many=True)
     return Response(serializer.data)
 
 
 @api_view(["GET"])
 @campaign_and_player_required
-def get_character_detail(request, character):
-    serializer = CharacterSerializer(character)
+def get_character(request, character):
+    serializer = SerializerCharacter(character)
     return Response(serializer.data)

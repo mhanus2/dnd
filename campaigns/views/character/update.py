@@ -14,18 +14,18 @@ from campaigns.models import (
     CharacterMultiClass,
 )
 from campaigns.serializers import (
-    CharacterAbilitySerializer,
-    CharacterSkillSerializer,
-    PassiveSkillSerializer,
-    SavingThrowSerializer,
-    HitDiceSerializer,
-    SpellSlotSerializer,
-    CharacterBasicInfoSerializer,
-    CharacterMultiClassSerializer,
-    CharacterHealthSerializer,
-    CharacterAttributesSerializer,
-    CharacterMagicSerializer,
-    CharacterNotesSerializer
+    SerializerCharacterAbility,
+    SerializerCharacterSkill,
+    SerializerPassiveSkill,
+    SerializerSavingThrow,
+    SerializerHitDice,
+    SerializerSpellSlot,
+    SerializerCharacterBasicInfo,
+    SerializerCharacterMultiClass,
+    SerializerCharacterHealth,
+    SerializerCharacterAttributes,
+    SerializerCharacterMagic,
+    SerializerCharacterNotes
 )
 from dnd_data.models import Skill, Ability, Dice, CharacterClass
 
@@ -35,7 +35,7 @@ from dnd_data.models import Skill, Ability, Dice, CharacterClass
 def update_basic_info(request, character):
     data = request.data
 
-    serializer = CharacterBasicInfoSerializer(character, data=data)
+    serializer = SerializerCharacterBasicInfo(character, data=data)
 
     if serializer.is_valid():
         serializer.save()
@@ -49,7 +49,7 @@ def update_basic_info(request, character):
 def update_health(request, character):
     data = request.data
 
-    serializer = CharacterHealthSerializer(character, data=data)
+    serializer = SerializerCharacterHealth(character, data=data)
 
     if serializer.is_valid():
         serializer.save()
@@ -63,7 +63,7 @@ def update_health(request, character):
 def update_attributes(request, character):
     data = request.data
 
-    serializer = CharacterAttributesSerializer(character, data=data)
+    serializer = SerializerCharacterAttributes(character, data=data)
 
     if serializer.is_valid():
         serializer.save()
@@ -77,7 +77,7 @@ def update_attributes(request, character):
 def update_magic(request, character):
     data = request.data
 
-    serializer = CharacterMagicSerializer(character, data=data)
+    serializer = SerializerCharacterMagic(character, data=data)
 
     if serializer.is_valid():
         serializer.save()
@@ -91,7 +91,7 @@ def update_magic(request, character):
 def update_notes(request, character):
     data = request.data
 
-    serializer = CharacterNotesSerializer(character, data=data)
+    serializer = SerializerCharacterNotes(character, data=data)
 
     if serializer.is_valid():
         serializer.save()
@@ -113,7 +113,7 @@ def update_character_multiclass(request, character):
             character=character, character_class=character_class_instance
         )[0]
 
-        serializer = CharacterMultiClassSerializer(existing_instance, data=item)
+        serializer = SerializerCharacterMultiClass(existing_instance, data=item)
 
         if serializer.is_valid():
             serializer.save()
@@ -138,7 +138,7 @@ def update_character_abilities(request, character):
             character=character, ability=ability_instance
         )[0]
 
-        serializer = CharacterAbilitySerializer(existing_instance, data=item)
+        serializer = SerializerCharacterAbility(existing_instance, data=item)
 
         if serializer.is_valid():
             serializer.save()
@@ -163,7 +163,7 @@ def update_character_skills(request, character):
             character=character, skill=skill_instance
         )[0]
 
-        serializer = CharacterSkillSerializer(existing_instance, data=item)
+        serializer = SerializerCharacterSkill(existing_instance, data=item)
 
         if serializer.is_valid():
             serializer.save()
@@ -195,7 +195,7 @@ def update_passive_skills(request, character):
             character=character, skill=skill_instance
         )[0]
 
-        serializer = PassiveSkillSerializer(existing_instance, data=item)
+        serializer = SerializerPassiveSkill(existing_instance, data=item)
 
         if serializer.is_valid():
             serializer.save()
@@ -221,7 +221,7 @@ def update_saving_throws(request, character):
             character=character, ability=ability_instance
         )[0]
 
-        serializer = SavingThrowSerializer(existing_instance, data=item)
+        serializer = SerializerSavingThrow(existing_instance, data=item)
 
         if serializer.is_valid():
             serializer.save()
@@ -247,7 +247,7 @@ def update_hit_dices(request, character):
             character=character, dice=dice_instance
         )[0]
 
-        serializer = HitDiceSerializer(existing_instance, data=item)
+        serializer = SerializerHitDice(existing_instance, data=item)
 
         if serializer.is_valid():
             serializer.save()
@@ -271,7 +271,7 @@ def update_spell_slots(request, character):
             character=character, level=item["level"]
         )[0]
 
-        serializer = SpellSlotSerializer(existing_instance, data=item)
+        serializer = SerializerSpellSlot(existing_instance, data=item)
 
         if serializer.is_valid():
             serializer.save()

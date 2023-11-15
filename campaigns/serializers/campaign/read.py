@@ -5,25 +5,25 @@ from campaigns.models import (
     Character,
     Session
 )
-from dnd_data.serializers import UserSerializer
+from dnd_data.serializers import SerializerUser
 
 
-class CampaignCharactersSerializer(serializers.ModelSerializer):
+class SerializerCampaignCharacters(serializers.ModelSerializer):
     class Meta:
         model = Character
         fields = ('name',)
 
 
-class SessionSerializer(serializers.ModelSerializer):
+class SerializerSession(serializers.ModelSerializer):
     class Meta:
         model = Session
-        fields = ['name', 'date']
+        fields = ['name', 'description', 'date', 'character_count']
 
 
-class CampaignSerializer(serializers.ModelSerializer):
-    dungeon_master = UserSerializer()
-    characters = CampaignCharactersSerializer(many=True, read_only=True)
-    sessions = SessionSerializer(many=True, read_only=True)
+class SerializerCampaign(serializers.ModelSerializer):
+    dungeon_master = SerializerUser()
+    characters = SerializerCampaignCharacters(many=True, read_only=True)
+    sessions = SerializerSession(many=True, read_only=True)
 
     class Meta:
         model = Campaign
@@ -33,23 +33,23 @@ class CampaignSerializer(serializers.ModelSerializer):
         ret = super().to_representation(instance)
 
         characters = Character.objects.filter(campaign=instance)
-        character_serializer = CampaignCharactersSerializer(characters, many=True)
+        character_serializer = SerializerCampaignCharacters(characters, many=True)
         ret["characters"] = character_serializer.data
 
         sessions = Session.objects.filter(campaign=instance)
-        session_serializer = SessionSerializer(sessions, many=True)
+        session_serializer = SerializerSession(sessions, many=True)
         ret["sessions"] = session_serializer.data
 
         return ret
 
 
-class CampaignListSerializer(serializers.ModelSerializer):
+class SerializerCampaignList(serializers.ModelSerializer):
     class Meta:
         model = Campaign
         fields = ["id", "name", "description"]
 
 
-class CampaignTypeSerializer(serializers.Serializer):
+class SerializerCampaignType(serializers.Serializer):
     user_is_dm = serializers.BooleanField(default=False)
-    dm = CampaignListSerializer(many=True, read_only=True)
-    player = CampaignListSerializer(many=True, read_only=True)
+    dm = SerializerCampaignList(many=True, read_only=True)
+    player = SerializerCampaignList(many=True, read_only=True)

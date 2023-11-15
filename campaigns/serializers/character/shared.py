@@ -12,7 +12,7 @@ from campaigns.models import (
 )
 
 
-class CharacterMultiClassSerializer(serializers.ModelSerializer):
+class SerializerCharacterMultiClass(serializers.ModelSerializer):
     character_class_name = serializers.StringRelatedField(source="character_class.name")
 
     class Meta:
@@ -20,7 +20,7 @@ class CharacterMultiClassSerializer(serializers.ModelSerializer):
         fields = ("character_class", "character_class_name", "level")
 
 
-class CharacterAbilitySerializer(serializers.ModelSerializer):
+class SerializerCharacterAbility(serializers.ModelSerializer):
     ability_name = serializers.StringRelatedField(source="ability.name")
 
     class Meta:
@@ -28,7 +28,7 @@ class CharacterAbilitySerializer(serializers.ModelSerializer):
         fields = ("ability", "ability_name", "score", "modifier")
 
 
-class CharacterSkillSerializer(serializers.ModelSerializer):
+class SerializerCharacterSkill(serializers.ModelSerializer):
     skill_name = serializers.StringRelatedField(source="skill.name")
 
     class Meta:
@@ -36,7 +36,7 @@ class CharacterSkillSerializer(serializers.ModelSerializer):
         fields = ("skill", "skill_name", "value", "proficiency")
 
 
-class PassiveSkillSerializer(serializers.ModelSerializer):
+class SerializerPassiveSkill(serializers.ModelSerializer):
     skill_name = serializers.StringRelatedField(source="skill.name")
 
     class Meta:
@@ -44,7 +44,7 @@ class PassiveSkillSerializer(serializers.ModelSerializer):
         fields = ("skill", "skill_name", "value", "proficiency")
 
 
-class SavingThrowSerializer(serializers.ModelSerializer):
+class SerializerSavingThrow(serializers.ModelSerializer):
     ability_name = serializers.StringRelatedField(source="ability.name")
 
     class Meta:
@@ -52,7 +52,7 @@ class SavingThrowSerializer(serializers.ModelSerializer):
         fields = ("ability", "ability_name", "value", "proficiency")
 
 
-class HitDiceSerializer(serializers.ModelSerializer):
+class SerializerHitDice(serializers.ModelSerializer):
     dice_name = serializers.StringRelatedField(source="dice.name")
 
     class Meta:
@@ -60,15 +60,15 @@ class HitDiceSerializer(serializers.ModelSerializer):
         fields = ("dice", "dice_name", "max_qty", "actual_qty")
 
 
-class SpellSlotSerializer(serializers.ModelSerializer):
+class SerializerSpellSlot(serializers.ModelSerializer):
     class Meta:
         model = SpellSlot
         fields = ("level", "max_slots", "remaining_slots")
 
 
-class CharacterSpellSerializer(serializers.ModelSerializer):
+class SerializerCharacterSpell(serializers.ModelSerializer):
     spell_name = serializers.StringRelatedField(source="spell.name")
-    character_class_relation = CharacterMultiClassSerializer()
+    character_class_relation = SerializerCharacterMultiClass()
 
     class Meta:
         model = CharacterSpell

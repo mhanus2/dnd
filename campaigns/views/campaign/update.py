@@ -5,7 +5,7 @@ from rest_framework.response import Response
 
 from campaigns.decorators import dungeon_master_required
 from campaigns.models import Campaign
-from campaigns.serializers import CampaignUpdateSerializer
+from campaigns.serializers import SerializerCampaignUpdate
 
 
 @api_view(["PUT"])
@@ -15,7 +15,7 @@ def update_campaign(request, campaign_id):
 
     data = request.data
 
-    serializer = CampaignUpdateSerializer(campaign, data=data)
+    serializer = SerializerCampaignUpdate(campaign, data=data)
 
     if serializer.is_valid():
         serializer.save()

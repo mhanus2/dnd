@@ -8,6 +8,7 @@ class Session(models.Model):
         "campaigns.Campaign", on_delete=models.CASCADE, related_name="campaign_sessions"
     )
     name = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
     date = models.DateField()
 
     @property
@@ -20,7 +21,7 @@ class Session(models.Model):
 
 class SessionCharacter(models.Model):
     session = models.ForeignKey(
-        Session, on_delete=models.CASCADE, related_name="sessions_characters"
+        Session, on_delete=models.CASCADE, related_name="session_characters"
     )
     character = models.ForeignKey("campaigns.Character", on_delete=models.CASCADE)
 

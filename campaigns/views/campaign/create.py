@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from campaigns.serializers import CampaignCreationSerializer
+from campaigns.serializers import SerializerCampaignCreation
 
 
 @api_view(["POST"])
@@ -17,7 +17,7 @@ def create_campaign(request):
     data = request.data
     data['dungeon_master_id'] = user_instance.id
 
-    serializer = CampaignCreationSerializer(data=data)
+    serializer = SerializerCampaignCreation(data=data)
 
     if serializer.is_valid():
         serializer.save()

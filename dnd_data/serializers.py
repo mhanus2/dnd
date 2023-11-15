@@ -4,31 +4,31 @@ from rest_framework import serializers
 from .models import Race, CharacterClass, Background, Alignment
 
 
-class UserSerializer(serializers.ModelSerializer):
+class SerializerUser(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['username']
 
 
-class RaceSerializer(serializers.ModelSerializer):
+class SerializerRace(serializers.ModelSerializer):
     class Meta:
         model = Race
         fields = ['name']
 
 
-class CharacterClassSerializer(serializers.ModelSerializer):
+class SerializerCharacterClass(serializers.ModelSerializer):
     class Meta:
         model = CharacterClass
         fields = ['name']
 
 
-class BackgroundSerializer(serializers.ModelSerializer):
+class SerializerBackground(serializers.ModelSerializer):
     class Meta:
         model = Background
         fields = ['name']
 
 
-class AlignmentSerializer(serializers.ModelSerializer):
+class SerializerAlignment(serializers.ModelSerializer):
     class Meta:
         model = Alignment
         fields = ['name']

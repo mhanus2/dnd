@@ -2,11 +2,11 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 
 from campaigns.models import Campaign
-from dnd_data.serializers import UserSerializer
+from dnd_data.serializers import SerializerUser
 
 
-class CampaignCreationSerializer(serializers.ModelSerializer):
-    dungeon_master = UserSerializer(read_only=True)
+class SerializerCampaignCreation(serializers.ModelSerializer):
+    dungeon_master = SerializerUser(read_only=True)
     dungeon_master_id = serializers.PrimaryKeyRelatedField(
         queryset=User.objects.all(),
         write_only=True,

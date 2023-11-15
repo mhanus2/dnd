@@ -13,6 +13,7 @@ from .models import (
     InventoryItem,
     CharacterSpell,
     Session,
+    SessionCharacter,
     CharacterWeapon
 )
 
@@ -100,6 +101,7 @@ class InventoryAdmin(admin.ModelAdmin):
 
 admin.site.register(Campaign)
 admin.site.register(Session)
+admin.site.register(SessionCharacter)
 admin.site.register(CharacterAbility)
 admin.site.register(CharacterSkill)
 admin.site.register(Character, CharacterAdmin)

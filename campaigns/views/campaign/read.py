@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from campaigns.models import Campaign
-from campaigns.serializers.campaign import CampaignTypeSerializer, CampaignSerializer
+from campaigns.serializers.campaign import SerializerCampaignType, SerializerCampaign
 
 
 @api_view(["GET"])
@@ -16,7 +16,7 @@ def get_campaigns(request):
         ~Q(dungeon_master=user_instance)
     ).distinct()
 
-    serializer = CampaignTypeSerializer(
+    serializer = SerializerCampaignType(
         {
             "user_is_dm": user_instance.groups.filter(name="DM").exists(),
             "dm": dm_campaigns,
@@ -28,8 +28,8 @@ def get_campaigns(request):
 
 
 @api_view(["GET"])
-def get_campaign_detail(request, campaign_id):
+def get_campaign(request, campaign_id):
     campaign = get_object_or_404(Campaign, id=campaign_id)
 
-    serializer = CampaignSerializer(campaign)
+    serializer = SerializerCampaign(campaign)
     return Response(serializer.data)

@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view
 
 from rest_framework.response import Response
-from .serializers import RaceSerializer
+from .serializers import SerializerRace
 
 from .models import Race
 
@@ -10,5 +10,5 @@ from .models import Race
 def get_races(request):
     races = Race.objects.all()
 
-    serializer = RaceSerializer(races, many=True)
+    serializer = SerializerRace(races, many=True)
     return Response(serializer.data)

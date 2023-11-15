@@ -2,7 +2,6 @@ from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
 from django.db import models
 
-# todo - zbrane
 # todo - inventar vytvorit po vytvoreni postavy
 # todo - magical property - empty u nemagickych postav?
 # todo - so zachrany - jak to nazvat?
@@ -49,6 +48,7 @@ class Character(models.Model):
         "dnd_data.Ability", on_delete=models.CASCADE, default=5
     )
     magical_attack_bonus = models.SmallIntegerField(default=0)
+    alchemy_jug = models.SmallIntegerField(default=0)
 
     notes = models.TextField(blank=True)
 
