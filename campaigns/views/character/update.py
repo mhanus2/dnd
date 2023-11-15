@@ -22,6 +22,10 @@ from campaigns.serializers import (
     SpellSlotSerializer,
     CharacterBasicInfoSerializer,
     CharacterMultiClassSerializer,
+    CharacterHealthSerializer,
+    CharacterAttributesSerializer,
+    CharacterMagicSerializer,
+    CharacterNotesSerializer
 )
 from dnd_data.models import Skill, Ability, Dice, CharacterClass
 
@@ -30,16 +34,70 @@ from dnd_data.models import Skill, Ability, Dice, CharacterClass
 @campaign_and_player_required
 def update_basic_info(request, character):
     data = request.data
-    data["character"] = character.id
 
     serializer = CharacterBasicInfoSerializer(character, data=data)
 
     if serializer.is_valid():
         serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+@api_view(["PATCH"])
+@campaign_and_player_required
+def update_health(request, character):
+    data = request.data
+
+    serializer = CharacterHealthSerializer(character, data=data)
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["PATCH"])
+@campaign_and_player_required
+def update_attributes(request, character):
+    data = request.data
+
+    serializer = CharacterAttributesSerializer(character, data=data)
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["PATCH"])
+@campaign_and_player_required
+def update_magic(request, character):
+    data = request.data
+
+    serializer = CharacterMagicSerializer(character, data=data)
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["PATCH"])
+@campaign_and_player_required
+def update_notes(request, character):
+    data = request.data
+
+    serializer = CharacterNotesSerializer(character, data=data)
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(["PATCH"])
 @campaign_and_player_required

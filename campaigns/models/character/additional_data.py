@@ -133,6 +133,7 @@ class SpellSlot(models.Model):
 class CharacterWeapon(models.Model):
     character = models.ForeignKey("campaigns.Character", on_delete=models.CASCADE)
     weapon = models.ForeignKey("dnd_data.Weapon", on_delete=models.CASCADE)
+    notes = models.TextField(blank=True)
 
 
 class Inventory(models.Model):

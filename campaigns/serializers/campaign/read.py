@@ -3,25 +3,42 @@ from rest_framework import serializers
 from campaigns.models import (
     Campaign,
     Character,
+    Session
 )
-from campaigns.serializers.character import CharacterSerializer
 from dnd_data.serializers import UserSerializer
+
+
+class CampaignCharactersSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Character
+        fields = ('name',)
+
+
+class SessionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Session
+        fields = ['name', 'date']
 
 
 class CampaignSerializer(serializers.ModelSerializer):
     dungeon_master = UserSerializer()
-    characters = CharacterSerializer(many=True, read_only=True)
+    characters = CampaignCharactersSerializer(many=True, read_only=True)
+    sessions = SessionSerializer(many=True, read_only=True)
 
     class Meta:
         model = Campaign
-        fields = ["name", "description", "dungeon_master"]
+        fields = ["name", "description", "dungeon_master", "characters", "sessions"]
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)
 
         characters = Character.objects.filter(campaign=instance)
-        character_serializer = CharacterSerializer(characters, many=True)
-        ret["character"] = character_serializer.data
+        character_serializer = CampaignCharactersSerializer(characters, many=True)
+        ret["characters"] = character_serializer.data
+
+        sessions = Session.objects.filter(campaign=instance)
+        session_serializer = SessionSerializer(sessions, many=True)
+        ret["sessions"] = session_serializer.data
 
         return ret
 

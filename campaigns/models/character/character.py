@@ -5,6 +5,7 @@ from django.db import models
 # todo - zbrane
 # todo - inventar vytvorit po vytvoreni postavy
 # todo - magical property - empty u nemagickych postav?
+# todo - so zachrany - jak to nazvat?
 
 STATUS_CHOICES = [
     ("active", "Active"),
@@ -30,6 +31,13 @@ class Character(models.Model):
     )
     armor_class = models.PositiveIntegerField(default=10)
 
+    # Attributes
+    proficiency_bonus = models.PositiveIntegerField(default=0)
+    inspiration = models.BooleanField(default=False)
+    initiative = models.IntegerField(default=0)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="inactive")
+    speed = models.PositiveIntegerField(default=0)
+
     # Efficiencies
     light_armor = models.BooleanField(default=False)
     middle_armor = models.BooleanField(default=False)
@@ -40,14 +48,7 @@ class Character(models.Model):
     magical_property = models.ForeignKey(
         "dnd_data.Ability", on_delete=models.CASCADE, default=5
     )
-
-    proficiency_bonus = models.PositiveIntegerField(default=0)
-
-    inspiration = models.BooleanField(default=False)
-    initiative = models.IntegerField(default=0)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="inactive")
-
-    speed = models.PositiveIntegerField(default=0)
+    magical_attack_bonus = models.SmallIntegerField(default=0)
 
     notes = models.TextField(blank=True)
 

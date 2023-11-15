@@ -1,6 +1,8 @@
 from django.db import models
 
 
+# todo - Pridat description a pak i do serializeru
+
 class Session(models.Model):
     campaign = models.ForeignKey(
         "campaigns.Campaign", on_delete=models.CASCADE, related_name="campaign_sessions"

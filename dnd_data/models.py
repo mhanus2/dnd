@@ -1,6 +1,5 @@
 from django.db import models
 
-# todo - zjistit co vše je potřeba u zbraní
 
 
 class Race(models.Model):
@@ -10,30 +9,15 @@ class Race(models.Model):
     def __str__(self):
         return self.name
 
-    def to_json(self):
-        json_data = {
-            "id": self.id,
-            "name": self.name,
-            "speed": self.speed
-        }
-        return json_data
-
 
 class CharacterClass(models.Model):
     name = models.CharField(max_length=200)
 
-    def __str__(self):
-        return self.name
-
     class Meta:
         verbose_name_plural = "Character Classes"
 
-    def to_json(self):
-        json_data = {
-            "id": self.id,
-            "name": self.name
-        }
-        return json_data
+    def __str__(self):
+        return self.name
 
 
 class Background(models.Model):
@@ -42,13 +26,6 @@ class Background(models.Model):
     def __str__(self):
         return self.name
 
-    def to_json(self):
-        json_data = {
-            "id": self.id,
-            "name": self.name
-        }
-        return json_data
-
 
 class Alignment(models.Model):
     name = models.CharField(max_length=200)
@@ -56,22 +33,15 @@ class Alignment(models.Model):
     def __str__(self):
         return self.name
 
-    def to_json(self):
-        json_data = {
-            "id": self.id,
-            "name": self.name
-        }
-        return json_data
-
 
 class Ability(models.Model):
     name = models.CharField(max_length=50)
 
-    def __str__(self):
-        return self.name
-
     class Meta:
         verbose_name_plural = "Abilities"
+
+    def __str__(self):
+        return self.name
 
 
 class Skill(models.Model):
@@ -112,8 +82,18 @@ class Item(models.Model):
         return self.name
 
 
+class DamageType(models.Model):
+    name = models.CharField(max_length=50)
+
+    def __str__(self) -> str:
+        return self.name
+
+
 class Weapon(models.Model):
     name = models.CharField(max_length=50)
+    damage_dice_count = models.PositiveSmallIntegerField(default=1)
+    damage_dice = models.ForeignKey(Dice, on_delete=models.CASCADE)
+    damage_type = models.ForeignKey(DamageType, on_delete=models.CASCADE)
 
     def __str__(self) -> str:
         return self.name

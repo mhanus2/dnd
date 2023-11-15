@@ -17,6 +17,10 @@ urlpatterns = [
     path('<int:campaign_id>/characters/<int:character_id>/delete/', views.delete_character),
     
     path('<int:campaign_id>/characters/<int:character_id>/update/basic-info/', views.update_basic_info),
+    path('<int:campaign_id>/characters/<int:character_id>/update/health/', views.update_health),
+    path('<int:campaign_id>/characters/<int:character_id>/update/attributes/', views.update_attributes),
+    path('<int:campaign_id>/characters/<int:character_id>/update/magic/', views.update_magic),
+    path('<int:campaign_id>/characters/<int:character_id>/update/notes/', views.update_notes),
     
     path('<int:campaign_id>/characters/<int:character_id>/update/character-multiclass/', views.update_character_multiclass),
     path('<int:campaign_id>/characters/<int:character_id>/update/character-abilities/', views.update_character_abilities),

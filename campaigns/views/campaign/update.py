@@ -5,24 +5,20 @@ from rest_framework.response import Response
 
 from campaigns.decorators import dungeon_master_required
 from campaigns.models import Campaign
-from campaigns.serializers import CampaignSerializer
-
-
-# todo - uprava kampane - pridat vsechny fieldy
+from campaigns.serializers import CampaignUpdateSerializer
 
 
 @api_view(["PUT"])
 @dungeon_master_required
 def update_campaign(request, campaign_id):
-    data = request.data
-
     campaign = get_object_or_404(Campaign, id=campaign_id)
 
-    campaign.name = data.get("name", campaign.name)
-    campaign.description = data.get("description", campaign.description)
+    data = request.data
 
-    campaign.save()
+    serializer = CampaignUpdateSerializer(campaign, data=data)
 
-    serializer = CampaignSerializer(campaign)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

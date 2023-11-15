@@ -2,21 +2,20 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from campaigns.models import Campaign
 from campaigns.serializers import CampaignCreationSerializer
 
 
 @api_view(["POST"])
 def create_campaign(request):
     user_instance = request.user
-    
+
     if not user_instance.groups.filter(name="DM").exists():
         return Response(
             {"detail": "Permission denied."}, status=status.HTTP_403_FORBIDDEN
         )
 
     data = request.data
-    data['dungeon_master'] = user_instance.id
+    data['dungeon_master_id'] = user_instance.id
 
     serializer = CampaignCreationSerializer(data=data)
 
