@@ -1,11 +1,10 @@
 from .base import *
 
 # todo - secret key
-SECRET_KEY = 'django-insecure-455p9io@)pkf_ly#g^ihns1d#1ufgexx(0(mxxs^ppuoj4uim)'
+import os
+SECRET_KEY = os.environ['SECRET_KEY']
 
 DEBUG = False
-
-ALLOWED_HOSTS = []
 
 # todo - database
 DATABASES = {
