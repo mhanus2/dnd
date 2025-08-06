@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from campaigns.models import Campaign
+from campaigns.models import Campaign, Session
 from dnd_data.serializers import SerializerUser
 
 
@@ -16,3 +16,9 @@ class SerializerCampaignCreation(serializers.ModelSerializer):
     class Meta:
         model = Campaign
         fields = ["name", "description", "dungeon_master", "dungeon_master_id"]
+
+
+class SerializerSessionCreation(serializers.ModelSerializer):
+    class Meta:
+        model = Session
+        fields = ["name", "description", "date", "campaign"]

@@ -9,6 +9,10 @@ urlpatterns = [
     path('<int:campaign_id>/update/', views.update_campaign),
     path('<int:campaign_id>/delete/', views.delete_campaign),
 
+    path('<int:campaign_id>/sessions/create/', views.create_session),
+    path('<int:campaign_id>/sessions/<int:session_id>/update/', views.update_session),
+    path('<int:campaign_id>/sessions/<int:session_id>/delete/', views.delete_session),
+
     path('<int:campaign_id>/characters/', views.get_characters),
     path('<int:campaign_id>/characters/create/', views.create_character),
     path('<int:campaign_id>/characters/<int:character_id>/', views.get_character),
